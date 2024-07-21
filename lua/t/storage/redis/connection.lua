@@ -26,7 +26,7 @@ return function(conn)
   conn=conn or default()
 print(' redis()', conn.host, conn.port)
   local r,e = red.connect(conn.host, conn.port)
-  if e then print(' ERROR: ', e, ' while connecting to: ', conn.host, conn.port); return nil end
+  if e then print(' ERROR: ', e, ' while connecting to: ', conn.host, conn.port); error(' ERROR: ', e, ' while connecting to: ', conn.host, conn.port) return nil end
   if conn.pass then assert(r:auth(conn.pass)) end
   if conn.db then assert(r:select(conn.db)) end
   return r

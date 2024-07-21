@@ -4,7 +4,7 @@ describe("cache", function()
     t = require "t"
     require "t.storage.redis.connection"
     t.env.REDIS_HOST='127.0.0.1'
-    cache = require "testdata.cache.some"
+    cache = t.storage.redis.cache.some
   end)
   it("env", function()
     assert.equal('127.0.0.1', t.env.REDIS_HOST)
