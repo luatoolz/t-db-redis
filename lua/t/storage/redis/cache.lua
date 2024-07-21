@@ -2,9 +2,10 @@ local t = require "t"
 local is = t.is
 local iter = table.iter
 
-local meta = require "meta"
-local require = meta.require(...)
-local connection = require".connection"
+--local meta = require "meta"
+--local require = meta.require(...)
+--local connection = require".connection"
+local connection = require "t.storage.redis.connection"
 
 local json = t.format.json
 
