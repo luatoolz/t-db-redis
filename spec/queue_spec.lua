@@ -2,6 +2,8 @@ describe("queue", function()
   local t, queue
   setup(function()
     t = require "t"
+    require "t.storage.redis.connection"
+    t.env.REDIS_HOST='127.0.0.1'
     queue = require "testdata.queue.some"
   end)
   it("type", function()

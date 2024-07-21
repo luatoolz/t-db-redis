@@ -4,6 +4,7 @@ describe("connection", function()
     t = require "t"
     is = t.is
     conn = require "t.storage.redis.connection"
+    t.env.REDIS_HOST='127.0.0.1'
   end)
   it("connection", function()
     assert.is_function(conn)
@@ -11,6 +12,7 @@ describe("connection", function()
     assert.not_nil(conn)
     assert.equal('t/storage/redis/connection', t.type(conn))
     assert.is_true(is.factory(conn))
+    
     if os.getenv('REDIS_HOST') then
       assert.is_true(conn():ping())
     end

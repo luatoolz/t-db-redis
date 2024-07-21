@@ -2,7 +2,12 @@ describe("cache", function()
   local t, cache
   setup(function()
     t = require "t"
+    require "t.storage.redis.connection"
+    t.env.REDIS_HOST='127.0.0.1'
     cache = require "testdata.cache.some"
+  end)
+  it("env", function()
+    assert.equal('127.0.0.1', t.env.REDIS_HOST)
   end)
   it("type", function()
     assert.is_table(cache)
