@@ -78,7 +78,9 @@ __len                           -- same as `__tonumber`, but of course do not wo
 ## depends luarocks
 - `t`
 - `t-env`
-- `lua-redis`
+- `t-format-json`
+- `redis-lua`
+- `lua-resty-redis`
 
 ## test depends
 - `busted`
