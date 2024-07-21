@@ -12,7 +12,6 @@ describe("connection", function()
     assert.not_nil(conn)
     assert.equal('t/storage/redis/connection', t.type(conn))
     assert.is_true(is.factory(conn))
-    
     if os.getenv('REDIS_HOST') then
       assert.is_true(conn():ping())
     end

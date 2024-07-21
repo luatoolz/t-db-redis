@@ -29,6 +29,8 @@ jobs:
       run: luarocks build --deps-mode all ${{ env.ROCKSPEC }}
     - name: run redis docker
       run: docker compose up -d --wait --wait-timeout 10 --no-log-prefix 
+    - name: run redis logs
+      run: docker compose logs redis && docker compose ps
     - name: busted
       run: luarocks test -- -o TAP
     - name: run redis docker
