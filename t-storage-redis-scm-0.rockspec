@@ -21,7 +21,8 @@ dependencies = {
   "lua >= 5.1",
   "t",
   "t-env",
-  "lua-redis",
+  "redis-lua",
+  "lua-resty-redis",
 }
 
 test_dependencies = {
