@@ -1,0 +1,27 @@
+describe("queue", function()
+  local t, queue
+  setup(function()
+    t = require "t"
+    queue = require "testdata.queue.some"
+  end)
+  it("type", function()
+    assert.is_table(queue)
+    assert.is_table(getmetatable(queue))
+    local q = require "t.storage.redis.queue"
+    assert.equal('t/storage/redis/queue', t.type(q))
+    assert.is_nil(q())
+  end)
+  it("for", function()
+    assert.equal(0, tonumber(queue))
+    assert.equal(1, tonumber(queue + 'any'))
+    assert.equal(2, tonumber(queue + 'other'))
+    assert.equal(2, tonumber(queue))
+    assert.same({'any', 'other'}, table.map(queue))
+  end)
+  it("__unm", function()
+    assert.equal(0, tonumber(queue))
+    assert.equal(1, tonumber(queue + 'any'))
+    assert.equal(2, tonumber(queue + 'other'))
+    assert.equal(0, tonumber(-queue))
+  end)
+end)

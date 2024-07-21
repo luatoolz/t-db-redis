@@ -1,0 +1,14 @@
+services:
+  redis:
+    image: redis:latest
+    read_only: true
+    restart: no
+    ports:
+      - 6379:6379
+    tmpfs:
+      - /data/db:size=128M,mode=1700
+    healthcheck:
+      test: [ "CMD", 'redis-cli', 'ping' ]
+      interval: 1s
+      timeout: 1s
+      retries: 10
