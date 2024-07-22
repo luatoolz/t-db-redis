@@ -1,10 +1,6 @@
 local t = require "t"
 local is = t.is
 local iter = table.iter
-
---local meta = require "meta"
---local require = meta.require(...)
---local connection = require ".connection"
 local connection = require "t.storage.redis.connection"
 local functions = {rpush=true, lpop=true, llen=true}
 
@@ -19,6 +15,7 @@ return setmetatable({}, {
   end,
   __concat = function(self, x) if is.bulk(x) then for it in iter(x) do _=self+it end; return self end end,
   __div = function(self, to) return type(to)~='nil' and self(self.__ or connection(), tostring(to)) or nil end,
+  __eq = function(self, to) return is.eq(table.map(self):tohash(), table(table.map(to)):tohash()) end,
   __index = function(self, to)
     if type(to)=='string' then
       if functions[to] then return self.__ and function(this, ...) return self.__[to](self.__, ...) end or function(this, ...) return nil end end

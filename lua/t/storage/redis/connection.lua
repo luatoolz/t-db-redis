@@ -2,9 +2,7 @@ local t = require "t"
 local env = t.env
 local meta = require "meta"
 local red = meta.no.require("resty.redis") or meta.no.require "redis"
-
-assert(red, 'redis module failed to load', type(meta.no.require("resty.redis")), type(meta.no.require "redis"))
-print(' redis module', type(meta.no.require("resty.redis")), type(meta.no.require "redis"))
+assert(red, 'error: redis module required')
 
 env.REDIS_HOST    = 'redis'
 env.REDIS_PORT    = 6379
@@ -24,9 +22,7 @@ end
 
 return function(conn)
   conn=conn or default()
-print(' redis()', conn.host, conn.port)
-  local r,e = red.connect(conn.host, conn.port)
-  if e then print(' ERROR: ', e, ' while connecting to: ', conn.host, conn.port); error(' ERROR: ', e, ' while connecting to: ', conn.host, conn.port) return nil end
+  local r = assert(red.connect(conn.host, conn.port))
   if conn.pass then assert(r:auth(conn.pass)) end
   if conn.db then assert(r:select(conn.db)) end
   return r

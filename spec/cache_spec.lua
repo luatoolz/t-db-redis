@@ -42,13 +42,13 @@ describe("cache", function()
     assert.same({'a','b','c','d'}, cache.anobject2)
   end)
   it("__mod", function()
-    assert.same_values({'other', 'another'}, (cache + {
+    assert.same({'other', 'another'}, (cache + {
       any='any_value', other='other_value', third=3} + {
       another='more_another'}) % '*ther')
   end)
   it("cache", function()
     assert.equal(0, tonumber(-cache))
-    assert.same_values({}, cache)
+    assert.same({}, table.map(cache))
 
 --    cache['*']=nil
     cache.any=nil
@@ -58,10 +58,10 @@ describe("cache", function()
     cache.other='other_value'
     assert.equal(2, tonumber(cache))
 
-    assert.same_values({'any', 'other'}, cache % '*')
-    assert.same_values({'any', 'other'}, table.map(cache))
-    assert.same_values({any='any_value', other='other_value'}, cache)
-    assert.same_values({any='any_value', other='other_value', third=3}, cache + {third='3'})
+    assert.same({'any', 'other'}, cache % '*')
+    assert.same({'any', 'other'}, table.map(cache))
+    assert.eq({any='any_value', other='other_value'}, cache)
+    assert.eq({any='any_value', other='other_value', third=3}, cache + {third=3})
 
 --    assert.equal('', cache % '*')
 --    assert.equal('', cache['*'])
