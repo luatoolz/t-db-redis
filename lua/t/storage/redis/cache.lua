@@ -15,7 +15,7 @@ return setmetatable({}, {
     local rv = setmetatable({__=redis, ___=to, ____=self}, getmetatable(self)); rawset(self, to, rv); return rv end end,
   __concat = function(self, to) return self+to end,
   __div = function(self, to) assert(type(to)=='string'); return to:match(':') and to or delim:zjoin(tostring(self), to) end,
-  __eq = function(self, to) return is.table.indexed and table.equal(table.map(self), to) or table.equal(table.clone(self, true), to) end,
+  __eq = function(self, to) return is.table.indexed(to) and is.same_values(table.map(self), to) or table.equal(table.clone(self, true), to) end,
   __index = function(self, x) if type(x)=='string' and x:match('^_+') then return nil end
     if type(next(self))=='nil' then return self(connection(), self/x) end;
     if self.__ then
