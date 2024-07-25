@@ -40,6 +40,10 @@ describe("cache", function()
 
     cache.anobject2={'a','b','c','d'}
     assert.same({'a','b','c','d'}, cache.anobject2)
+
+    assert.same(cache[''], cache['*'])
+    assert.same(cache['*'], cache['*'])
+    assert.same(cache[{}], cache['*'])
   end)
   it("__mod", function()
     assert.same_values({'other', 'another'}, (cache + {

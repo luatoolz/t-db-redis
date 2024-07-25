@@ -17,6 +17,7 @@ return setmetatable({}, {
   __div = function(self, to) assert(type(to)=='string'); return to:match(':') and to or delim:zjoin(tostring(self), to) end,
   __eq = function(self, to) return is.table.indexed(to) and is.same_values(table.map(self), to) or table.equal(table.clone(self, true), to) end,
   __index = function(self, x) if type(x)=='string' and x:match('^_+') then return nil end
+    if x=='' or (type(x)=='table' and type(next(x))=='nil') then return self['*'] end
     if type(next(self))=='nil' then return self(connection(), self/x) end;
     if self.__ then
       local rv=self.__:get(self/x)
@@ -27,6 +28,7 @@ return setmetatable({}, {
   __mod = function(self, to) return (self and self.__ and to) and t.array(self.__:keys(self/to))*last or {} end,
   __name='t/storage/redis/cache',
   __newindex = function(self, x, v) if self.__ then if type(v)~='nil' then
+    if x=='' or (type(x)=='table' and type(next(x))=='nil') then x='*' end
     if type(v)=='table' then v=json.encode(v) end
     self.__:set(self/x, v) else _=self-x end end end,
   __pairs=function(self) local it, k = iter(self); return function()
