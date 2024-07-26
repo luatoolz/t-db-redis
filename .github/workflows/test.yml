@@ -3,8 +3,11 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
+    paths:
+      - '**.lua'
+      - '**.t'
+      - '**.yml'
+      - '**.rockspec'
   workflow_dispatch:
 jobs:
   test:
@@ -14,6 +17,7 @@ jobs:
       matrix:
         luaVersion: ["5.1", "5.2", "5.3", "luajit", "luajit-openresty"]
     env:
+      DEV: --dev
       ROCKSPEC: ${{ github.event.repository.name }}-scm-0.rockspec
     steps:
     - uses: actions/checkout@master
@@ -22,16 +26,16 @@ jobs:
         luaVersion: ${{ matrix.luaVersion }}
     - uses: leafo/gh-actions-luarocks@v4
     - name: test deps
-      run: luarocks test --prepare
+      run: luarocks test --prepare ${{ env.DEV }}
     - name: dependencies
-      run: luarocks install --deps-mode all --only-deps --dev ${{ env.ROCKSPEC }}
+      run: luarocks install --deps-mode all --only-deps ${{ env.DEV }} ${{ env.ROCKSPEC }}
     - name: build
-      run: luarocks build --deps-mode all ${{ env.ROCKSPEC }}
-    - name: run redis docker
-      run: docker compose up -d --wait --wait-timeout 10 --no-log-prefix 
-    - name: run redis logs
-      run: docker compose logs redis && docker compose ps
-    - name: busted
+      run: luarocks build --deps-mode all ${{ env.DEV }} ${{ env.ROCKSPEC }}
+    - name: docker compose up
+      run: docker compose up -d --wait --wait-timeout 10 --no-log-prefix
+    - name: docker logs
+      run: docker compose logs && docker compose ps
+    - name: test
       run: luarocks test -- -o TAP
-    - name: run redis docker
+    - name: docker compose down
       run: docker compose down --remove-orphans -v
