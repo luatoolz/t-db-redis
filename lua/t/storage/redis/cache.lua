@@ -14,7 +14,7 @@ return setmetatable({}, {
   __call = function(self, redis, to) if type(next(self))=='nil' and redis then
     local rv = setmetatable({__=redis, ___=to, ____=self}, getmetatable(self)); rawset(self, to, rv); return rv end end,
   __concat = function(self, to) return self+to end,
-  __div = function(self, to) assert(type(to)=='string'); return to:match(':') and to or delim:zjoin(tostring(self), to) end,
+  __div = function(self, to) assert(type(to)=='string'); return to:match(':') and to or delim:join(tostring(self), to) end,
   __eq = function(self, to) return is.table.indexed(to) and is.same_values(table.map(self), to) or table.equal(table.clone(self, true), to) end,
   __index = function(self, x) if type(x)=='string' and x:match('^_+') then return nil end
     if x=='' or (type(x)=='table' and type(next(x))=='nil') then return self['*'] end
@@ -36,6 +36,6 @@ return setmetatable({}, {
   __sub = function(self, x) if type(x)=='string' and self.__ then self.__:del(self/x) end; return self end,
   __toboolean=function(self) return tonumber(self)>0 end,
   __tonumber = function(self) return #(self%'*') end,
-  __tostring = function(self) return delim:zjoin(self.____, self.___) or '' end,
+  __tostring = function(self) return delim:join(self.____, self.___) or '' end,
   __unm = function(self) if self.__ then for it in iter(self) do _=self-it end end; return self end,
 })
