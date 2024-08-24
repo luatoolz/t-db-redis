@@ -3,7 +3,7 @@ local is = t.is
 local inspect = require 'inspect'
 local connection = require "t.storage.redis.connection"
 local actions = assert(require "t.storage.redis.actions")
-local functions = actions([[incr incrby decr decrby get set setnx]])
+local functions = actions([[incr incrby decr decrby get set setnx del]])
 local invallid = function() return nil, 'invalid object' end
 local join = (':'):joiner()
 
@@ -30,7 +30,7 @@ root=setmetatable({}, {
   end,
   __index = function(self, to)
     if type(to)~='string' then return end
-    if self~=root and to=='__' then
+    if not rawequal(self, root) and to=='__' then
       self[to]=connection()
       return self[to]
     end
@@ -47,6 +47,6 @@ root=setmetatable({}, {
   __toboolean = function(self) return (self.__ and self.___) end,
   __tonumber = function(self) return tonumber(self:get()) or 0 end,
   __tostring = function(self) return self.___ or getmetatable(self).__name end,
-  __unm = function(self) self:set(0); return 0 end,
+  __unm = function(self) self:del(); return 0 end,
 })
 return root
