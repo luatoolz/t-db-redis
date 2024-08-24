@@ -4,8 +4,9 @@ Redis object interface linkable as cache <-> object. Interface implemented using
 Queue object interface:
 ```lua
 local t = require "t"
-local r = t.storage.redis.queue -- queue object with default connection env, use regular redis key
-local queue = q.queue_id        -- select queue
+local redis = t.storage.redis   -- redis object interface: queue, cache objects
+
+local queue = redis.queue.id    -- select queue, use default connection env, use regular redis key
 
 _ = queue + {...}               -- add item to queue
 _ = queue .. {{}, {}, ...}      -- add bulk: array, set, etc
@@ -32,9 +33,11 @@ these metamethods respected by `t` library methods:
 Cache object interface:
 ```lua
 local t = require "t"
-local c = t.storage.redis.cache -- cache object with default connection env
-local cache = c.cache_id        -- select cache
-local x = c.one.two.three       -- multi level path maps as redis key based `one:two:three`, ex. `one:two:three:1`
+local redis = t.storage.redis
+local _ = redis.cache           -- cache object, use default connection env
+
+local cache = redis.cache.id    -- select cache
+local x = cache.one.two.three   -- multi level path maps as redis key based `one:two:three`, ex. `one:two:three:1`
 local o = cache.item            -- maps as redis key `cname:item`
 
 cache.item='value'              -- string var
@@ -89,7 +92,7 @@ __len                           -- same as `__tonumber`, but of course do not wo
 ## see also
 - `t.storage.mongo`
 - `t.storage.file`
-- `t.storage.ngxshm`
+- `t.storage.shm`
 - `t.storage.rabbitmq`
 
 Planned to implement:
