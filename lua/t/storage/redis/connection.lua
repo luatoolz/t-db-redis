@@ -4,11 +4,13 @@ local meta = require "meta"
 local red = meta.no.require("resty.redis") or meta.no.require "redis"
 assert(red, 'error: redis module required')
 
-env.REDIS_HOST    = 'redis'
-env.REDIS_PORT    = 6379
---env.REDIS_DB
---env.REDIS_USER
---env.REDIS_PASS
+env({
+  REDIS_HOST='redis',
+  REDIS_PORT=6379,
+--REDIS_DB
+--REDIS_USER
+--REDIS_PASS
+})
 
 local function default()
   return {
