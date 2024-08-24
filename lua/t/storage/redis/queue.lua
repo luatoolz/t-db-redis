@@ -2,10 +2,15 @@ local t = require "t"
 local is = t.is
 local iter = table.iter
 local connection = require "t.storage.redis.connection"
+local json = t.format.json
 local functions = {rpush=true, lpop=true, llen=true}
 
 return setmetatable({}, {
-  __add = function(self, x) self:rpush(tostring(self), x); return self end,
+  __add = function(self, x)
+    if x and type(x)~='string' then x=json(x) end
+    if x then self:rpush(tostring(self), x) end
+    return self
+  end,
   __call = function(self, redis, to)
     if type(next(self))=='nil' and redis then
       local rv = setmetatable({__=redis, ___=to}, getmetatable(self))

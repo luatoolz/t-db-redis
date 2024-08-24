@@ -14,8 +14,8 @@ return setmetatable({}, {
   __call = function(self, redis, to) if type(next(self))=='nil' and redis then
     local rv = setmetatable({__=redis, ___=to, ____=self}, getmetatable(self)); rawset(self, to, rv); return rv end end,
   __concat = function(self, to) return self+to end,
-  __div = function(self, to) assert(type(to)=='string'); return to:match(':') and to or delim:join(tostring(self), to) end,
-  __eq = function(self, to) return is.table.indexed(to) and is.same_values(table.map(self), to) or table.equal(table.clone(self, true), to) end,
+  __div = function(self, to) assert(type(to)=='string', 'await string, got ' .. type(to)); return to:match(':') and to or delim:join(tostring(self), to) end,
+  __eq = function(self, to) return is.table.indexed(to) and is.values(table.map(self), to) or table.equal(table.clone(self, true), to) end,
   __index = function(self, x) if type(x)=='string' and x:match('^_+') then return nil end
     if x=='' or (type(x)=='table' and type(next(x))=='nil') then return self['*'] end
     if type(next(self))=='nil' then return self(connection(), self/x) end;
@@ -31,8 +31,8 @@ return setmetatable({}, {
     if x=='' or (type(x)=='table' and type(next(x))=='nil') then x='*' end
     if type(v)=='table' then v=json.encode(v) end
     self.__:set(self/x, v) else _=self-x end end end,
-  __pairs=function(self) local it, k = iter(self); return function()
-    k=it(); if k~=nil then return k, self[k] else return nil, nil end end end,
+  __pairs=function(self) local it, k = iter(self)
+    return function() k=it(); if k~=nil then return k, self[k] else return nil, nil end end end,
   __sub = function(self, x) if type(x)=='string' and self.__ then self.__:del(self/x) end; return self end,
   __toboolean=function(self) return tonumber(self)>0 end,
   __tonumber = function(self) return #(self%'*') end,

@@ -1,10 +1,11 @@
 describe("cache", function()
-  local t, cache
+  local t, cache, iter
   setup(function()
     t = require "t"
     require "t.storage.redis.connection"
     t.env.REDIS_HOST='127.0.0.1'
     cache = t.storage.redis.cache.some
+    iter = table.iter
   end)
   it("env", function()
     assert.equal('127.0.0.1', t.env.REDIS_HOST)
@@ -63,7 +64,7 @@ describe("cache", function()
     assert.equal(2, tonumber(cache))
 
     assert.values({'any', 'other'}, cache % '*')
---    assert.values({'any', 'other'}, table.map(cache))
+    assert.values({'any', 'other'}, table.map(iter(cache)))
     assert.eq({any='any_value', other='other_value'}, cache)
     assert.eq({any='any_value', other='other_value', third=3}, cache + {third=3})
 
