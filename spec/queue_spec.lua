@@ -1,11 +1,10 @@
 describe("queue", function()
-  local t, queue, inspect
+  local t, queue
   setup(function()
     t = require "t"
     require "t.storage.redis.connection"
     t.env.REDIS_HOST='127.0.0.1'
     queue = t.storage.redis.queue.some
-    inspect=require 'inspect'
   end)
   before_each(function() _=-queue end)
   after_each(function() _=-queue end)
@@ -17,7 +16,6 @@ describe("queue", function()
     assert.is_nil(q())
   end)
   it("for", function()
-    print(inspect(queue))
     assert.equal(0, tonumber(queue))
     assert.equal(1, tonumber(queue + 'any'))
     assert.equal(2, tonumber(queue + 'other'))
@@ -35,5 +33,10 @@ describe("queue", function()
     assert.equal(0, tonumber(-queue))
     assert.eq({'any'}, queue + 'any')
     assert.eq({'any', 'other'}, queue + 'any' + 'other')
+  end)
+  it("__div", function()
+    local deep=queue/'deep'
+    assert.equal('some:deep', tostring(deep))
+    assert.equal('some:deep:deeper', tostring(deep/'deeper'))
   end)
 end)

@@ -1,8 +1,6 @@
 local t = require "t"
 local env = t.env
-local meta = require "meta"
-local red = meta.no.require("resty.redis") or meta.no.require "redis"
-assert(red, 'error: redis module required')
+local red = require 'redis'
 
 env({
   REDIS_HOST='redis',

@@ -37,7 +37,6 @@ local redis = t.storage.redis
 local _ = redis.cache           -- cache object, use default connection env
 
 local cache = redis.cache.id    -- select cache
-local x = cache.one.two.three   -- multi level path maps as redis key based `one:two:three`, ex. `one:two:three:1`
 local o = cache.item            -- maps as redis key `cname:item`
 
 cache.item='value'              -- string var
@@ -53,7 +52,8 @@ cache - {'item1', 'item2', ...} -- bulk delete
 _= cache + {id={a='a',x='y'}, id2={b='x'}, id3=3, id4='wow'} + {...} -- save objects with `__add` metamethod
 _= cache .. {...}               -- save with `__concat` metamethod
 
-cache % '*'                     -- get cache keys, relative match as cname:item:*
+cache % '*'                     -- get cache keys as full names: cname:author:* (cname:author:john_doe)
+cache % '**'                    -- get cache keys as short relative name: john_doe
 cache['*']                      -- get pairs
 cache['*']=nil                  -- delete matched
 

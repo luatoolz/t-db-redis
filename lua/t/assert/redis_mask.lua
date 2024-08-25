@@ -1,0 +1,1 @@
+return {1, "expected to be redis mask: %s", "expected to be redis mask: %s"}

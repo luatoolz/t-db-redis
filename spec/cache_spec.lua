@@ -19,8 +19,8 @@ describe("cache", function()
     assert.equal('some', tostring(cache))
   end)
   it("__div", function()
-    assert.equal('some:path', cache / 'path')
-    assert.equal('some:path', cache / 'some:path')
+    assert.equal('some:path', tostring(cache / 'path'))
+    assert.equal('some:path', tostring(cache / 'some:path'))
   end)
   it("__sub", function()
     cache.any = 'suka'
@@ -47,15 +47,17 @@ describe("cache", function()
     assert.same(cache[{}], cache['*'])
   end)
   it("__mod", function()
-    assert.values({'other', 'another'}, (cache + {
-      any='any_value', other='other_value', third=3} + {
-      another='more_another'}) % '*ther')
+    local last = ('[^:]+$'):matcher()
+    _ = cache + {any='any_value', other='other_value', third=3} + {another={more_another="yes", age=818}}
+
+    assert.equal(818, cache.another.age)
+    assert.values({'some:another', 'some:other'}, (cache % '*ther'))
+    assert.values({'another', 'other'}, (cache % '*ther' * last))
   end)
   it("cache", function()
     assert.equal(0, tonumber(-cache))
     assert.same({}, table.map(cache))
 
---    cache['*']=nil
     cache.any=nil
     assert.equal(0, tonumber(cache))
     cache.any='any_value'
@@ -63,13 +65,11 @@ describe("cache", function()
     cache.other='other_value'
     assert.equal(2, tonumber(cache))
 
-    assert.values({'any', 'other'}, cache % '*')
-    assert.values({'any', 'other'}, table.map(iter(cache)))
-    assert.eq({any='any_value', other='other_value'}, cache)
-    assert.eq({any='any_value', other='other_value', third=3}, cache + {third=3})
-
---    assert.equal('', cache % '*')
---    assert.equal('', cache['*'])
+    assert.values({'some:any', 'some:other'}, cache % '*')
+    assert.values({'any', 'other'}, cache % '**')
+    assert.values({'any', 'other'}, table.map(iter(cache % '**')))
+    assert.eq({any='any_value', other='other_value'}, cache['**'])
+    assert.eq({any='any_value', other='other_value', third=3}, (cache + {third=3})['**'])
   end)
   it("__unm", function()
     assert.equal(0, tonumber(-cache))
