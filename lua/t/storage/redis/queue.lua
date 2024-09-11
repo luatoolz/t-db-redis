@@ -45,6 +45,12 @@ return setmetatable(root, {
   __iter = function(self) return function() return self:__lpop() or nil end end,
   __len = function(self) return tonumber(self) end,
   __name='t/storage/redis/queue',
+  __pow=function(self, x) -- tie to objects, loader or any indexable
+    assert(not rawequal(self, root))
+    if is.callable(x) then self.__handler=x end
+    if type(x)=='number' then self.__threads=x end
+    return self
+  end,
   __toboolean = function(self) return (self.__ and self.___) end,
   __tonumber = function(self) return self:__llen() or 0 end,
   __tostring = function(self) return self.___ or getmetatable(self).__name end,
